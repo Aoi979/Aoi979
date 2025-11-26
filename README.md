@@ -6,6 +6,8 @@ Mostly work with **C/C++** and **CUDA** on **Linux**, learning by building thing
 
 **Focus:** C/C++ · CUDA · Concurrency · Parallelism · Linux  
 
+
+Still learning - aiming for high-performance systems with C/C++ and CUDA, yet my talent seems strictly single-threaded.
 ---
 
 ## Contact
