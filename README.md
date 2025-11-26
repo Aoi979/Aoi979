@@ -9,6 +9,8 @@ Mostly work with **C/C++** and **CUDA** on **Linux**, learning by building thing
 *Still learning - aiming for high-performance systems with C/C++ and CUDA, yet my talent seems strictly single-threaded.*
 
 
+
+---
 ## Contact
 
 If you want to reach me, try decoding this with CUDA or C++20:
