@@ -7,7 +7,7 @@ Parallel computing, GPU programming, and systems.
 ---
 ## Contact
 
-If you want to reach me, try decoding this with CUDA or C++20:
+If you want to reach me, try decoding this with C++:
 
 ```cpp
 template <auto X>
