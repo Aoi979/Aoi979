@@ -1,14 +1,8 @@
-
 # Aoi Kajitsu
 
-Interested in **concurrent programming** and **parallel computing**.  
-Mostly work with **C/C++** and **CUDA** on **Linux**, learning by building things from scratch.
+Mostly C/C++ and CUDA on Linux.
 
-**Focus:** C/C++ · CUDA · Concurrency · Parallelism · Linux  
-
-*Still learning - aiming for high-performance systems with C/C++ and CUDA, yet my talent seems strictly single-threaded.*
-
-
+Parallel computing, GPU programming, and systems.
 
 ---
 ## Contact
