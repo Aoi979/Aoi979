@@ -10,62 +10,37 @@ Parallel computing, GPU programming, and systems.
 If you want to reach me, try decoding this with CUDA or C++20:
 
 ```cpp
-constexpr char decode_char(int y) {
+template <auto X>
+using C = std::integral_constant<decltype(X), X>;
+
+consteval char decode_char(int y) {
     constexpr int A_inv = 45;
     constexpr int B = 19;
     constexpr int K = 128;
-    return static_cast<char>((A_inv * ((y + K) - B)) % K);
+
+    return static_cast<char>(
+        (A_inv * ((y + K) - B)) % K
+    );
 }
 
-template<int... Values>
-constexpr auto decode_email_cpp(std::integer_sequence<int, Values...>) {
-    return std::array<char, sizeof...(Values)>{ decode_char(Values)... };
+template <typename... Cs>
+consteval auto decode(std::tuple<Cs...>) {
+    return std::array<char, sizeof...(Cs) + 1>{
+        decode_char(Cs::value)...,
+        '\0'
+    };
 }
 
-constexpr auto email_cpp = decode_email_cpp(std::integer_sequence<int,
-    24, 30, 64, 77, 40, 40, 80, 6, 77, 40, 43, 60,
-    114, 83, 118, 84, 24, 64, 47, 57, 98, 30, 84>{});
-
-#ifdef USE_CUDA
-__global__ void decode_email_cuda(char* out, const uint8_t* encoded, int N) {
-    const uint32_t A_inv = 45; 
-    const uint32_t B = 19;
-    const uint32_t K = 128;
-
-    int idx = threadIdx.x + blockIdx.x * blockDim.x;
-    if (idx < N) {
-        uint32_t y = encoded[idx];
-        uint32_t x = (A_inv * ((y + K) - B)) % K;
-        out[idx] = static_cast<char>(x);
-    }
-}
-#endif
+constexpr auto email = decode(std::tuple{
+    C<24>{},  C<30>{},  C<64>{},  C<77>{},
+    C<40>{},  C<40>{},  C<80>{},  C<6>{},
+    C<77>{},  C<40>{},  C<43>{},  C<60>{},
+    C<114>{}, C<83>{},  C<118>{}, C<84>{},
+    C<24>{},  C<64>{},  C<47>{},  C<57>{},
+    C<98>{},  C<30>{},  C<84>{}
+});
 
 int main() {
-    const int N = 23;
-    uint8_t encoded[N] = {
-        24, 30, 64, 77, 40, 40, 80, 6, 77, 40, 43, 60,
-        114, 83, 118, 84, 24, 64, 47, 57, 98, 30, 84
-    };
-
-#ifdef USE_CUDA
-    char* d_out;
-    uint8_t* d_encoded;
-    cudaMalloc(&d_out, N);
-    cudaMalloc(&d_encoded, N);
-    cudaMemcpy(d_encoded, encoded, N, cudaMemcpyHostToDevice);
-    decode_email_cuda<<<1, N>>>(d_out, d_encoded, N);
-    cudaDeviceSynchronize();
-    char result[N + 1];
-    cudaMemcpy(result, d_out, N, cudaMemcpyDeviceToHost);
-    result[N] = '\0';
-    std::cout << result << "\n";
-    cudaFree(d_out);
-    cudaFree(d_encoded);
-#else
-    for (char c : email_cpp) std::cout << c;
-    std::cout << '\n';
-#endif
-
+    std::cout << email.data() << '\n';
     return 0;
 }
